@@ -3,6 +3,7 @@ import MoviesAlbum from "./moviesAlbum";
 import Pagination from "./common/pagination";
 import {paginate} from "../utils/paginate";
 import _ from 'lodash';
+import { Link } from "react-router-dom";
 
 
 class Movies extends Component {
