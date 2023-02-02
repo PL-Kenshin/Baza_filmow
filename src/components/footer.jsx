@@ -1,7 +1,7 @@
 import React from "react";
 
 const Footer = () => {
-
+    let year = new Date().getFullYear()
 
    return (
     <footer className="bg-dark text-center text-white">
@@ -43,7 +43,7 @@ const Footer = () => {
     </div>
 
     <div className="text-center p-3">
-      © 2022 Copyright: Ptak Mateusz
+      © {year} Copyright: Ptak Mateusz
     </div>
     
   </footer>

@@ -17,9 +17,9 @@ const Pagination = ( props ) => {
 
 
    return (
-    <ul class="pagination">
-      <li class="page-item">
-        <a class="page-link" aria-label="Previous" onClick={() => currentPage>1?onPageChange(currentPage-1):null}>
+    <ul className="pagination">
+      <li className="page-item">
+        <a className="page-link" aria-label="Previous" onClick={() => currentPage>1?onPageChange(currentPage-1):null}>
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -29,8 +29,8 @@ const Pagination = ( props ) => {
                    </li>
                    )
                )}
-          <li class="page-item">
-          <a class="page-link" aria-label="Next" onClick={() => currentPage!==pagesCount?onPageChange(currentPage+1):null}>
+          <li className="page-item">
+          <a className="page-link" aria-label="Next" onClick={() => currentPage!==pagesCount?onPageChange(currentPage+1):null}>
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

@@ -81,3 +81,46 @@ body{
 .form-floating>label {
   padding: 0.5rem 0.75rem;
 }
+
+.klasa {
+  height:23rem;
+}
+@media (min-width: 768px) {
+  .klasa {
+      height: 9rem;
+  }
+}
+
+@media (min-width: 1080px) {
+  .klasa {
+      height: 12rem;
+  }
+}
+
+@media (min-width: 1240px) {
+  .klasa {
+      height: 15rem;
+  }
+}
+@media (min-width: 1400px) {
+  .klasa {
+      height: 17rem;
+  }
+}
+
+.card-body {
+  min-height: 6rem;
+  max-height: 6rem;
+}
+.card-text {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.col-md-2 {
+  min-width: min-content;
+}
+.album {
+  min-width: -webkit-fill-available;
+}

@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import MoviesAlbum from "./moviesAlbum";
 import Pagination from "./common/pagination";
 import {paginate} from "../utils/paginate";
-import _ from 'lodash';
-import { Link } from "react-router-dom";
-
+import eventBus from "./eventBus";
+//import _ from 'lodash';
+const axios = require('axios');
 
 class Movies extends Component {
 
@@ -16,57 +16,44 @@ class Movies extends Component {
            items: [],
            pageSize: 18,
            currentPage: 1,
-           sortColumn: {path: 'title', order: 'asc'}
+           searchItems: [],
+           searching:false
+           //sortColumn: {path: 'title', order: 'asc'}
        };
     }
 
     componentDidMount() {
-        /*fetch("https://taw-posts.herokuapp.com/api/posts",
-        {method: "GET",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': ' application/json',
-            'x-auth-token': localStorage.getItem('token')
-        }})
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result
-                    });
-                    console.log(result)
-                },
-                
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )*/
-        let result = []
-        for(let i = 0; i < 40; i++){
-                result.push({"id":i, "text": "Mandalorian", "image":"process.env.PUBLIC_URL + '/logo.png'"});
-        }
-        
 
-        this.setState({
-            isLoaded: true,
-            items: result
+        axios({method:'get',url:'https://at.usermd.net/api/movies'})
+        .then((result) => {
+            this.setState({
+                isLoaded: true,
+                items: result.data
+            });
+            eventBus.dispatch("mounted",{fun:this.handleSearch})
+        },
+        
+        (error) => {
+            this.setState({
+                isLoaded: true,
+                error
+            })
+            console.error('Something went wrong during fetching movies')
         })
+        
     }
 
-    handleDelete = (post) => {
-        const movies = this.state.items.filter(p => p.id !== post.id);
-        this.setState({items: movies});
+    handleSearch = (query) => {
+        const movies = this.state.items.filter(p => p.title.toLowerCase().includes(query.toLowerCase()));
+        
+        query!==""?this.setState({searchItems: movies, searching:true}):this.setState({searchItems: this.state.items, searching:false});
      };
 
     handlePageChange = (page) => {
         this.setState({currentPage: page});
     };
 
-    handleSort = (path) => {
+    /*handleSort = (path) => {
         const sortColumn = {...this.state.sortColumn};
         if (sortColumn.path === path) {
             sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
@@ -89,31 +76,40 @@ class Movies extends Component {
         if (this.state.sortColumn.order === 'desc') {
             return <i className="fa fa-sort-desc"></i>
         }
-     };
+     };*/
  
     render() {
-        const { items, pageSize, currentPage, sortColumn } = this.state;
+        const { items, pageSize, currentPage, searchItems/*, sortColumn*/ } = this.state;
         
-        if (!items.length) {
-            return <p>Brak wpisów</p>
-        }
-        
-        const sorted = _.orderBy(items, [sortColumn.path], [sortColumn.order]);
 
-        const movies = paginate(sorted, currentPage, pageSize);
- 
+        //const sorted = _.orderBy(items, [sortColumn.path], [sortColumn.order]);
+        let movies = paginate(searchItems, currentPage, pageSize);
+        if(this.state.searching===true){
+            return (
+                <React.Fragment>
+                    <MoviesAlbum
+                        items={movies}
+                        />
+                    <Pagination
+                        itemsCount={items.length}
+                        pageSize={this.state.pageSize}
+                        currentPage={this.state.currentPage}
+                        onPageChange={this.handlePageChange}
+                    />
+                    </React.Fragment>
+            )
+        }
+
+        movies = paginate(items, currentPage, pageSize);
+
         return (
             <React.Fragment>
                 <MoviesAlbum
                     items={movies}
-                    sortIcon={this.renderSortIcon}
-                    onDelete={this.handleDelete}
-                    onSort={this.handleSort}
                     />
                 <Pagination
                     itemsCount={items.length}
                     pageSize={this.state.pageSize}
-
                     currentPage={this.state.currentPage}
                     onPageChange={this.handlePageChange}
                 />
@@ -121,6 +117,7 @@ class Movies extends Component {
         )
     }
  }
- 
- export default Movies;
+
+export default Movies;
+
  
